@@ -1,7 +1,19 @@
+# Dependencies
+node_modules
 **/node_modules
+
+# Build outputs
+dist
 **/dist
+
+# Environment variables
+.env
+.env.*
 **/.env
 **/.env.*
+
+# Version control and OS files
 .git
 .DS_Store
+*.log
 npm-debug.log*
