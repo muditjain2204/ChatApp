@@ -7,6 +7,7 @@ import { clerkMiddleware } from "@clerk/express";
 import cors from "cors";
 import fs from "fs";
 import path from "path";
+import  job  from "./lib/cron";
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -39,5 +40,9 @@ if(fs.existsSync(publicDir)){
 console.log(process.env.MONGO_URL);
 app.listen(PORT, () => {
    connectDB();
-    console.log('Server is running on PORT:', PORT)
+    console.log('Server is running on PORT:', PORT);
+
+    if(process.env.NODE_ENV === "production"){
+        job.start();
+    }
 });
