@@ -3,10 +3,10 @@ import { connected } from "process";
 export {connectDB};
 async function connectDB(){
     try {
-        const mongoUri = process.env.MONGO_URI
+        const mongoUri = process.env.MONGO_URI || process.env.MONGO_URL;
 
         if(!mongoUri){
-            throw new Error("MONGO_URI  is required")
+            throw new Error("MONGO_URI or MONGO_URL is required")
         }
 
         const conn = await mongoose.connect(mongoUri);
