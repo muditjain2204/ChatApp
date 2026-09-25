@@ -1,6 +1,5 @@
 //first import database connection 
 import mongoose from "mongoose";
-import { createDeflate } from "zlib";
 //here mongodb also can make an id automatically 
 //but we are using clerk so that we have to take reference of it here\
 
@@ -14,7 +13,7 @@ const userSchema = new mongoose.Schema({
     },
     email:{
         type:String,
-        requires:true,
+        required:true,
         unique:true,
 
     },

@@ -1,8 +1,6 @@
 import express from "express";
 import User from "../models/user.model";
 import { verifyWebhook } from "@clerk/express/webhooks";
-import Message from "../models/message.model";
-import { stringToToken } from "typescript/unstable/ast";
 
 
 const router  = express.Router();
@@ -17,15 +15,7 @@ router.post("/", async ( req,res) => {
         return;
     }
 
-    //clerks verifier expects a web request with the raw body : express.raw gives a buffer
-    const payload  = Buffer.isBuffer(req.body) ? req.body.toString("utf8") : String(req.body);
-    const request = new Request("http://internal/webhooks/clerk", {
-        method:"POST",
-        headers: new Headers(req.headers as HeadersInit),
-        body:payload,
-    });
-
-    //throws if the signature is wrong ot the body was tempered with :  only then do we trust 
+    // Throws if the signature or raw request body is invalid.
     const evt = await verifyWebhook(req, { signingSecret});
 
     if(evt.type === "user.created" || evt.type === "user.updated"){
@@ -37,21 +27,24 @@ router.post("/", async ( req,res) => {
         const fullName = 
         [u.first_name, u.last_name].filter(Boolean).join(" ") ||u.username || email?.split("@")[0];
 
-        await User.findOneAndUpdate(
+        const user = await User.findOneAndUpdate(
             {clerkId:u.id},
             {clerkId:u.id, email, fullName, profilePic: u.image_url },
             { new:true, upsert:true, setDefaultOnInsert:true },
-        )
+        );
+        console.log(`Clerk user synced to MongoDB: ${user.clerkId}`);
     }
 
     if(evt.type === "user.deleted"){
         await User.findOneAndDelete({clerkId:evt.data.id!});
+        console.log(`Clerk user deleted from MongoDB: ${evt.data.id}`);
     }
 
     res.status(200).json({ received : true});
     }
+
     catch(error){
-        console.error("Error in clerk webhook:", error);
+        console.error("Error in Clerk webhook:", error);
         res.status(400).json({message:"webhook verification failed"});
     }
    

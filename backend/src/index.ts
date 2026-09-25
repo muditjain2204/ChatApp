@@ -47,4 +47,5 @@ app.listen(PORT, () => {
     if(process.env.NODE_ENV === "production"){
         job.start();
     }
+     
 });
