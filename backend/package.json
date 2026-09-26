@@ -14,6 +14,7 @@
   "license": "ISC",
   "dependencies": {
     "@clerk/express": "^2.1.69",
+    "@imagekit/nodejs": "^7.12.1",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/node": "^22.20.3",
@@ -22,9 +23,11 @@
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "mongoose": "^9.10.1",
+    "multer": "^2.4.0",
     "typescript": "^7.0.2"
   },
   "devDependencies": {
+    "@types/multer": "^2.2.0",
     "tsx": "^4.23.13"
   }
 }
