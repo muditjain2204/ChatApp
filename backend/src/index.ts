@@ -9,6 +9,7 @@ import fs from "fs";
 import path from "path";
 import  job  from "./lib/cron";
 import clerkWebhook from "./webhooks/clerk.webhook.js";
+import authRoutes from "./routes/auth.route";
 const app = express();
 const PORT = process.env.PORT || 3001;
 const FRONTEND_URL = process.env.FRONTEND_URL;
@@ -26,6 +27,8 @@ app.get("/health" , (req, res) => {
     const { message , image , video } = req.body;
     res.status(200).json({ok : true});
 });
+
+app.use("/api/auth" , authRoutes)
 
 //if the public directory existss , serve the static filea
 //this is the for the production build of the frontend
